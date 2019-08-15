@@ -1,16 +1,19 @@
 package com.hmoro.config;
 
+import com.hmoro.bean.Color;
+import com.hmoro.bean.ColorFactoryBean;
 import com.hmoro.bean.Person;
+import com.hmoro.bean.Red;
 import com.hmoro.condition.LinuxCondition;
+import com.hmoro.condition.MyImportBeanDefinitionRegistrar;
+import com.hmoro.condition.MyImportSelector;
 import com.hmoro.condition.WindowsCondition;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.*;
 
 // 满足当前条件，这个类中配置的所有 Bean 才会生效
 //@Conditional({WindowsCondition.class})
 @Configuration
+@Import({Color.class, Red.class, MyImportSelector.class, MyImportBeanDefinitionRegistrar.class}) // 导入组件、id默认是组件的全类名
 public class MainConfig2 {
     /*
      * @see ConfigurableBeanFactory#SCOPE_PROTOTYPE prototype
@@ -49,5 +52,23 @@ public class MainConfig2 {
     @Bean("jerry")
     public Person person02(){
         return new Person("Jerry",79);
+    }
+
+    /**
+     *  给容器中注册组件
+     *  1、包扫描 + 组件标注注解 (@Controller、@Service、@Repository、@Component)    自己写的类
+     *  2、@Bean[导入的第三方包里面的组件]
+     *  3、@Import[快速给容器中导入一个组件]
+     *      1)、@Import(要导入到容器中的组件); 容器会自动注册这个组件,id默认是全类名
+     *      2)、ImportSelector: 返回需要导入的组件全类名的数组
+     *      3)、ImportBeanDefinitionRegistrar: 手动注册 Bean 到容器中
+     *  4、使用 Spring 提供的 FactoryBean(工厂 Bean)
+     *      1)、默认获取到的是工厂Bean调用getObject创建的对象
+     *      2)、要获取到工厂Bean本身，需要在id前面加一个"&"
+     */
+
+    @Bean
+    public ColorFactoryBean colorFactoryBean(){
+        return new ColorFactoryBean();
     }
 }
