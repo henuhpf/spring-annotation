@@ -8,7 +8,7 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.TypeFilter;
 
 import java.io.IOException;
-
+//自定义过滤规则
 public class MyTypeFilter implements TypeFilter {
     /*
      metadataReader: 读取到的当前正在扫描的类的信息
